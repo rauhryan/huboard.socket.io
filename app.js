@@ -22,4 +22,4 @@ app.post("/hook", function (req, res) {
   res.send({});
 });
 
-app.listen(8080);
+app.listen(80);
