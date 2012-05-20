@@ -5,9 +5,9 @@
 
     <title>Index</title>
      <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js" type="text/javascript" charset="utf-8"></script>
-    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://live.huboard.com/socket.io/socket.io.js"></script>
     <script>
-      var socket = io.connect("http://huboard-live.herokuapp.com");
+      var socket = io.connect("https://live.huboard.com");
       socket.on('Learnboost/socket.io', function(message){ console.log("foo",message)});
     </script>
   </head>
