@@ -5,13 +5,13 @@
 
     <title>Index</title>
      <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js" type="text/javascript" charset="utf-8"></script>
-    <script src="//live.huboard.com/socket.io/socket.io.js"></script>
+     <script src="//{{server}}/socket.io/socket.io.js"></script>
     <script>
-      var socket = io.connect("//live.huboard.com");
+      var socket = io.connect("//{{server}}");
       socket.on('Learnboost/socket.io', function(message){ console.log("foo",message)});
     </script>
   </head>
   <body>
-    <h1 id="heading">Hi</h1>
+    <h1 id="heading">Hi {{server}}</h1>
   </body>
 </html>

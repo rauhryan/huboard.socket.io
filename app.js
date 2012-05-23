@@ -1,10 +1,12 @@
 var express = require('express'),
-app = express.createServer(),
-io = require("socket.io").listen(app);
+  app = express.createServer(),
+  io = require("socket.io").listen(app);
 
 app.configure(function(){
   app.use(express.bodyParser());
   app.use(app.router);
+  app.set('views', __dirname + "/views");
+  app.set('view engine', 'hbs');
 });
 
 io.configure(function() {
@@ -14,7 +16,7 @@ io.configure(function() {
 
 
 app.get('/', function(req, res) {
-  res.sendfile(__dirname + '/index.html');
+  res.render('index.hbs',{server: req.headers.host });
 });
 
 app.post("/hook", function (req, res) {
@@ -22,7 +24,7 @@ app.post("/hook", function (req, res) {
   res.send({});
 });
 
-var port = process.env.PORT || 8080;
+var port = process.env.PORT || 9191;
 app.listen(port, function() {
   console.log("Listening on port:", port);         
 });
