@@ -20,7 +20,7 @@ app.get('/', function(req, res) {
 });
 
 app.post("/hook", function (req, res) {
-  io.sockets.emit(req.body.channel, req.body.payload);
+  req.body.secret === process.env.SECRET && io.sockets.emit(req.body.channel, req.body.payload);
   res.send({});
 });
 
