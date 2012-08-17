@@ -3,7 +3,6 @@
   "version" : "0.0.1",
   "dependencies" : {
      "express" : "~>2.5.9",
-     "socket.io" : "~>0.9.6",
-     "hbs" : "latest"
+     "socket.io" : "~>0.9.6"
   }
 }

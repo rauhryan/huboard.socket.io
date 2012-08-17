@@ -5,8 +5,6 @@ var express = require('express'),
 app.configure(function(){
   app.use(express.bodyParser());
   app.use(app.router);
-  app.set('views', __dirname + "/views");
-  app.set('view engine', 'hbs');
 });
 
 io.configure(function() {
@@ -16,7 +14,7 @@ io.configure(function() {
 
 
 app.get('/', function(req, res) {
-  res.render('index.hbs',{server: req.headers.host });
+  res.sendfile(__dirname + '/index.html');
 });
 
 app.post("/hook", function (req, res) {
