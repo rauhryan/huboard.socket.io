@@ -23,7 +23,7 @@ app.get("/issues/webhook",function(req,res){
 });
 
 app.post("/issues/webhook", function(req, res) {
-   process.stdout.write("webhook:payload " + request.body.payload);
+   process.stdout.write("webhook:payload " + req.body.payload);
    var body = req.body,
       payload = body.payload,
     issue = payload.issue
