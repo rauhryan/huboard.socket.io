@@ -23,9 +23,8 @@ app.get("/issues/webhook",function(req,res){
 });
 
 app.post("/issues/webhook", function(req, res) {
-   process.stdout.write("webhook:payload " + req.body.payload);
-   var body = req.body,
-      payload = JSON.parse(body.payload),
+  var body = req.body,
+    payload = JSON.parse(body.payload),
     issue = payload.issue
     repository = payload.repository,
     action = payload.action;
@@ -34,15 +33,12 @@ app.post("/issues/webhook", function(req, res) {
    issue._data = {};
    issue.other_labels = [];
    
-   process.stdout.write("webhook:action " + repository.full_name + " " + " " + action);
 
    switch(action){
       case "opened":
-        process.stdout.write("webhook:opened " + repository.full_name);
         io.sockets.emit(repository.full_name, {payload:issue,event:"Opened.0"});
         break;
       case "closed":
-        process.stdout.write("webhook:closed " + repository.full_name);
         io.sockets.emit(repository.full_name, {payload:issue,event:"Closed." + issue.number});
         break;
 
