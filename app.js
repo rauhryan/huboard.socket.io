@@ -18,27 +18,31 @@ app.get('/', function(req, res) {
 });
 
 app.get("/issues/webhook",function(req,res){
-  res.send({message:"hi"});
+  res.send(req.body);
 
 });
 
-app.post("/issues/webhook", function(req,res) {
-   var issue = req.body.payload.issue;
+app.post("/issues/webhook", function(req, res) {
+   var body = req.body,
+      payload = body.payload,
+    issue = payload.issue
+    repository = payload.repository,
+    action = payload.action;
 
+   issue.repo = repository;
    issue._data = {};
-   issue.repo = req.body.payload.repository;
    issue.other_labels = [];
    
-   process.stdout.write("webhook:action " + req.body.payload.repository.full_name + " " + " " + req.body.payload.action);
+   process.stdout.write("webhook:action " + repository.full_name + " " + " " + action);
 
-   switch(req.body.payload.action){
+   switch(action){
       case "opened":
-        process.stdout.write("webhook:opened " + req.body.payload.repository.full_name);
-        io.sockets.emit(req.body.payload.repository.full_name, {payload:issue,event:"Opened.0"});
+        process.stdout.write("webhook:opened " + repository.full_name);
+        io.sockets.emit(repository.full_name, {payload:issue,event:"Opened.0"});
         break;
       case "closed":
-        process.stdout.write("webhook:closed " + req.body.payload.repository.full_name);
-        io.sockets.emit(req.body.payload.repository.full_name, {payload:issue,event:"Closed." + issue.number});
+        process.stdout.write("webhook:closed " + repository.full_name);
+        io.sockets.emit(repository.full_name, {payload:issue,event:"Closed." + issue.number});
         break;
 
    }
