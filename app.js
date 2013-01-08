@@ -17,7 +17,12 @@ app.get('/', function(req, res) {
   res.sendfile(__dirname + '/index.html');
 });
 
-app.post("issues/webhook", function(req,res) {
+app.get("/issues/webhook",function(req,res){
+  res.send({message:"hi"});
+
+});
+
+app.post("/issues/webhook", function(req,res) {
    var issue = req.body.payload.issue;
 
    issue._data = {};
@@ -37,6 +42,7 @@ app.post("issues/webhook", function(req,res) {
         break;
 
    }
+  res.send({message:"hi"});
 });
 
 app.post("/hook", function (req, res) {
