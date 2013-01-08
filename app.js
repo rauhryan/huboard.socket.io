@@ -24,15 +24,15 @@ app.post("issues/webhook", function(req,res) {
    issue.repo = req.body.payload.repository;
    issue.other_labels = [];
    
-   console.log("webhook:action", req.body.payload.repository.full_name, req.body.payload.action);
+   process.stdout.write("webhook:action " + req.body.payload.repository.full_name + " " + " " + req.body.payload.action);
 
    switch(req.body.payload.action){
       case "opened":
-        console.log("webhook:opened", req.body.payload.repository.full_name);
+        process.stdout.write("webhook:opened " + req.body.payload.repository.full_name);
         io.sockets.emit(req.body.payload.repository.full_name, {payload:issue,event:"Opened.0"});
         break;
       case "closed":
-        console.log("webhook:closed", req.body.payload.repository.full_name);
+        process.stdout.write("webhook:closed " + req.body.payload.repository.full_name);
         io.sockets.emit(req.body.payload.repository.full_name, {payload:issue,event:"Closed." + issue.number});
         break;
 
