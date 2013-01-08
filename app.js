@@ -25,7 +25,7 @@ app.get("/issues/webhook",function(req,res){
 app.post("/issues/webhook", function(req, res) {
    process.stdout.write("webhook:payload " + req.body.payload);
    var body = req.body,
-      payload = body.payload,
+      payload = JSON.parse(body.payload),
     issue = payload.issue
     repository = payload.repository,
     action = payload.action;
