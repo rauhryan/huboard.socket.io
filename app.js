@@ -1,6 +1,17 @@
-var express = require('express'),
-  app = express.createServer(),
-  io = require("socket.io").listen(app);
+var express = require('express');
+var app = express();
+var server = require('http').createServer(app);
+var io = require('socket.io').listen(server);
+var rest = require('restler');
+
+var base64 = require('./base64');
+
+var port = process.env.PORT || 8080;
+
+server.listen(port, function() {
+  console.log("Listening on port:", port);         
+});
+
 
 app.configure(function(){
   app.use(express.bodyParser());
@@ -10,12 +21,38 @@ app.configure(function(){
 io.configure(function() {
    io.set("transports", ["xhr-polling"]);
    io.set("pull duration", 10);
+
+  io.set('authorization', function (handshakeData, accept) {
+
+
+    if (handshakeData.query.token && handshakeData.headers.origin === process.env.ORIGIN) {
+
+      rest.get(process.env.ORIGIN + '/api/authorized', {query: {token: handshakeData.query.token}})
+      .on('success', function () {
+        accept(null, true)
+      })
+      .on('fail', function () {
+        accept("Failed auth", false)
+      })
+      .on('error', function () {
+        accept("Error during auth", false)
+      });
+
+
+    } else {
+      accept("Token not provided", false)
+      return;
+    } 
+
+
+  });
 });
 
 
 app.get('/', function(req, res) {
   res.sendfile(__dirname + '/index.html');
 });
+
 
 app.get("/issues/webhook",function(req,res){
   res.send(req.body);
@@ -51,7 +88,3 @@ app.post("/hook", function (req, res) {
   res.send({});
 });
 
-var port = process.env.PORT || 8080;
-app.listen(port, function() {
-  console.log("Listening on port:", port);         
-});
