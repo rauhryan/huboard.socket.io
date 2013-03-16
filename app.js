@@ -18,12 +18,17 @@ app.configure(function(){
   app.use(app.router);
 });
 
-io.configure(function() {
-   io.set("transports", ["xhr-polling"]);
-   io.set("pull duration", 10);
+io.configure('production', function(){
+
+  io.enable('browser client minification');  // send minified client
+  io.enable('browser client etag');          // apply etag caching logic based on version number
+  io.enable('browser client gzip');          // gzip the file
+  io.set('log level', 1);                    // reduce logging
+
+  io.set("transports", ["xhr-polling"]);
+  io.set("pull duration", 10);
 
   io.set('authorization', function (handshakeData, accept) {
-
 
     if (handshakeData.query.token && handshakeData.headers.origin === process.env.ORIGIN) {
 
@@ -38,16 +43,18 @@ io.configure(function() {
         accept("Error during auth", false)
       });
 
-
     } else {
       accept("Token not provided", false)
       return;
     } 
 
-
   });
+
 });
 
+io.configure('development', function(){
+  io.set('transports', ['websocket']);
+});
 
 app.get('/', function(req, res) {
   res.sendfile(__dirname + '/index.html');
@@ -61,25 +68,25 @@ app.get("/issues/webhook",function(req,res){
 
 app.post("/issues/webhook", function(req, res) {
   var body = req.body,
-    payload = JSON.parse(body.payload),
-    issue = payload.issue
-    repository = payload.repository,
-    action = payload.action;
+  payload = JSON.parse(body.payload),
+  issue = payload.issue
+  repository = payload.repository,
+  action = payload.action;
 
-   issue.repo = repository;
-   issue._data = {};
-   issue.other_labels = [];
-   
+  issue.repo = repository;
+  issue._data = {};
+  issue.other_labels = [];
 
-   switch(action){
-      case "opened":
-        io.sockets.emit(repository.full_name, {payload:issue,event:"Opened.0"});
-        break;
-      case "closed":
-        io.sockets.emit(repository.full_name, {payload:issue,event:"Closed." + issue.number});
-        break;
 
-   }
+  switch(action){
+    case "opened":
+      io.sockets.emit(repository.full_name, {payload:issue,event:"Opened.0"});
+    break;
+    case "closed":
+      io.sockets.emit(repository.full_name, {payload:issue,event:"Closed." + issue.number});
+    break;
+
+  }
   res.send({message:"hi"});
 });
 
