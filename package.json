@@ -1,7 +1,7 @@
 {
   "name" : "huboard-live",
   "engines": {
-    "node": "0.6.15"
+    "node": "0.8.16"
   },
   "version" : "0.0.1",
   "dependencies" : {
