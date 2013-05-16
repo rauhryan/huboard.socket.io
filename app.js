@@ -36,7 +36,8 @@ io.configure('production', function(){
       .on('success', function () {
         accept(null, true)
       })
-      .on('fail', function () {
+      .on('fail', function (data, response) {
+        console.log("handshake" ,data ,response)
         accept("Failed auth", false)
       })
       .on('error', function () {
