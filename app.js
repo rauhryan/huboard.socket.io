@@ -25,8 +25,7 @@ io.configure('production', function(){
   io.enable('browser client gzip');          // gzip the file
   io.set('log level', 1);                    // reduce logging
 
-  io.set("transports", ["xhr-polling"]);
-  io.set("pull duration", 10);
+  io.set('transports', ['websocket']);
 
   io.set('authorization', function (handshakeData, accept) {
 
