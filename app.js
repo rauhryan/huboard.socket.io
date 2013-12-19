@@ -21,8 +21,8 @@ app.configure(function(){
 io.configure('production', function(){
 
   io.enable('browser client minification');  // send minified client
-  io.enable('browser client etag');          // apply etag caching logic based on version number
-  io.enable('browser client gzip');          // gzip the file
+//  io.enable('browser client etag');          // apply etag caching logic based on version number
+ // io.enable('browser client gzip');          // gzip the file
   io.set('log level', 1);                    // reduce logging
 
   io.set('transports', ['websocket']);
@@ -35,7 +35,8 @@ io.configure('production', function(){
       .on('success', function () {
         accept(null, true)
       })
-      .on('fail', function () {
+      .on('fail', function (data, response) {
+        console.log("handshake" ,data ,response)
         accept("Failed auth", false)
       })
       .on('error', function () {
