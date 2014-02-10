@@ -77,13 +77,26 @@ app.post("/issues/webhook", function(req, res) {
   issue._data = {};
   issue.other_labels = [];
 
+  var payload = {
+    meta: {
+      action: "",
+      identifier: issue.number,
+      correlationId: ""
+      repo_full_name: repository.full_name
+    },
+    payload: {
+      issue: issue
+    }
+  }
 
   switch(action){
     case "opened":
-      io.sockets.emit(repository.full_name, {payload:issue,event:"Opened.0"});
+      payload.meta.action = "issue_opened";
+      io.sockets.emit(repository.full_name, payload);
     break;
     case "closed":
-      io.sockets.emit(repository.full_name, {payload:issue,event:"Closed." + issue.number});
+      payload.meta.action = "issue_closed";
+      io.sockets.emit(repository.full_name, payload);
     break;
 
   }
@@ -91,7 +104,10 @@ app.post("/issues/webhook", function(req, res) {
 });
 
 app.post("/hook", function (req, res) {
-  req.body.secret === process.env.SECRET && io.sockets.emit(req.body.channel, req.body.payload);
+  if(req.body.secret === process.env.SECRET) {
+    delete req.body.secret;
+    io.sockets.emit(req.body.meta.repo_full_name, req.body);
+  } 
   res.send({});
 });
 
