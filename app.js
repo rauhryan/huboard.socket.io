@@ -80,7 +80,7 @@ app.post("/issues/webhook", function(req, res) {
     meta: {
       action: "",
       identifier: issue.number,
-      correlationId: ""
+      correlationId: "",
       repo_full_name: repository.full_name
     },
     payload: {
