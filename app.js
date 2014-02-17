@@ -67,40 +67,18 @@ app.get("/issues/webhook",function(req,res){
 });
 
 app.post("/issues/webhook", function(req, res) {
-  var body = req.body,
-  payload = JSON.parse(body.payload),
-  issue = payload.issue
-  repository = payload.repository,
-  action = payload.action;
 
-  issue.repo = repository;
-  issue._data = {};
-  issue.other_labels = [];
-
-  var payload = {
-    meta: {
-      action: "",
-      identifier: issue.number,
-      correlationId: "",
-      repo_full_name: repository.full_name
-    },
-    payload: {
-      issue: issue
-    }
-  }
-
-  switch(action){
-    case "opened":
-      payload.meta.action = "issue_opened";
-      io.sockets.emit(repository.full_name, payload);
-    break;
-    case "closed":
-      payload.meta.action = "issue_closed";
-      io.sockets.emit(repository.full_name, payload);
-    break;
-
-  }
-  res.send({message:"hi"});
+  rest.post(process.env.ORIGIN + '/api/site/webhook/issue', { data: req.body })
+      .on('success', function () {
+        res.send("success")
+      })
+      .on('fail', function (data, response) {
+        console.log(data, response)
+        res.send("fail")
+      })
+      .on('error', function () {
+        res.send("error")
+      });
 });
 
 app.post("/hook", function (req, res) {
